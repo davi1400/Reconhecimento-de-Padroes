@@ -1,6 +1,8 @@
 from sklearn.model_selection import train_test_split
-from src.Utils.utils import get_inputs, get_outputs, string_to_number_class, get_data, heaveside, normalize
+from src.Utils.utils import get_inputs, get_outputs, string_to_number_class, get_data, heaveside, normalize, \
+    get_accuracy, get_confusion_matrix
 from numpy.random import rand
+from numpy import where
 
 
 class perceptron:
@@ -24,7 +26,6 @@ class perceptron:
                 # Hidden = X_train.dot(weights)
                 Y_output = self.forward(X_train, weights)
                 Error = Y_train - Y_output
-                print(Error)
                 if abs(Error).sum() == 0:
                     print(epoch)
                     break
@@ -34,7 +35,12 @@ class perceptron:
         return weights, X_test, Y_test
 
     def test(self, weights, X_test, Y_test, confusion_matrix=False):
-        return 0
+        Y_output = self.forward(X_test, weights)
+        accuracy = get_accuracy(Y_output, Y_test)
+        if confusion_matrix:
+            return accuracy, get_confusion_matrix(Y_output, Y_test)
+        else:
+            return accuracy
 
     def forward(self, X, weights):
         Hidden = X.dot(weights)
@@ -45,14 +51,13 @@ class perceptron:
         weights += (self.learning_rate * Error.T.dot(X)).T
         return weights
 
+    def transform_binary(self, name):
+        self.Y[where(self.classes == name)] = 0
+        self.Y[where(self.classes != name)] = 1
 
-if __name__ == '__main__':
-    data = get_data("OR", type='csv')
-    p = perceptron(data, 0.015, 100)
-    accuracys = []
-    confusions_matrix = []
-    for realization in range(20):
-        weights, X_test, Y_test = p.train()
-        accuracy, confusion_matrix = p.test(weights, X_test, Y_test, confusion_matrix=True)
-        accuracys.append(accuracy)
-        confusions_matrix.append(confusion_matrix)
+
+
+
+
+
+

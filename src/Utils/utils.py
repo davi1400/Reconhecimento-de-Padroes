@@ -1,14 +1,20 @@
-from numpy import array, zeros, where
+from numpy import array, zeros, where, sum
 from pandas import read_csv
 from pathlib import Path
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
 
 
 def normalize(X):
     return (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
 
 
-def accuracy():
-    pass
+def get_accuracy(Y_output, Y_test):
+    return abs(sum(Y_test == Y_output)) * 1.0 / len(Y_test) * 1.0
+
+
+def get_confusion_matrix(Y_output, Y_test):
+    return confusion_matrix(Y_test, Y_output)
 
 
 def heaveside(y):
@@ -54,10 +60,32 @@ def string_to_number_class(classes):
         count += 1
 
     count = 0
-    for label in classes.to_numpy():
+    all_classes = classes.to_numpy()
+    for label in all_classes:
         Y[count] = set_classes[label[0]]
         count += 1
     return Y
+
+
+# def histogram_plot(data, Y, X, N_attributs, feature_names, number_classes=3):
+#
+#     if number_classes > 3:
+#         # TODO
+#         pass
+#
+#     else:
+#         fig, axes = plt.subplots(nrows=2, ncols=2)
+#         colors = ['blue', 'red', 'green']
+#         classes = data.iloc[:, N_attributs:]
+#         classes = list(set(classes.to_numpy()[:, 0]))
+#
+#         for i, ax in enumerate(axes.flat):
+#             for label, color in zip(range(len(classes)), colors):
+#                 ax.hist(X[where(Y == label)[0]], label=classes[label], color=color)
+#                 ax.set_xlabel(feature_names[i])
+#                 ax.legend(loc='upper right')
+#
+#         plt.show()
 
 
 if __name__ == '__main__':
