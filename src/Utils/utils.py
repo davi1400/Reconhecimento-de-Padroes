@@ -3,6 +3,7 @@ from pandas import read_csv
 from pathlib import Path
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+from math import sqrt
 
 
 def normalize(X):
@@ -21,7 +22,7 @@ def heaveside(y):
     for i in range(len(y)):
         if y[i] > 0:
             y[i] = 1
-        else:
+        elif y[i] < 0:
             y[i] = 0
     return y
 
@@ -86,6 +87,13 @@ def string_to_number_class(classes):
 #                 ax.legend(loc='upper right')
 #
 #         plt.show()
+
+def calculate_euclidian_distance(X_example, example):
+    dist = 0
+    for i in range(len(X_example)):
+        dist += (X_example[i]-example[i])**2
+    return dist
+
 
 
 if __name__ == '__main__':

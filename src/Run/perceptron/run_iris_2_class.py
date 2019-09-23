@@ -10,13 +10,17 @@ from src.Algorithms.Supervised.Perceptron import perceptron
 import matplotlib.pyplot as plt
 from numpy import reshape, array, mean
 from sklearn.datasets import load_iris
+from src.Utils.ColorMap import ColorMap
+from matplotlib.colors import ListedColormap
+from src.Utils.utils import heaveside
 
 #  just for the plot
 IRIS = load_iris()
 
 if __name__ == '__main__':
     data = get_data("Iris", type='csv')
-    p = perceptron(data, 0.015, 100)
+    p = perceptron(data, 0.015, 500)
+    p.add_bias()
     feature_names = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
     target_names = array(['setosa', 'versicolor', 'virginica'], dtype='<U10')
     sepal_lenth = data[0]  # sepal length (cm)
@@ -35,7 +39,7 @@ if __name__ == '__main__':
     formatter = plt.FuncFormatter(lambda i, *args: target_names[int(i)])
 
     plt.figure(figsize=(5, 4))
-    plt.scatter(p.X[:, 0], p.X[:, 1], c=IRIS.target)
+    plt.scatter(p.X[:, 1], p.X[:, 2], c=IRIS.target)
     plt.colorbar(ticks=[0, 1, 2], format=formatter)
     plt.xlabel(feature_names[0])  # sepal length (cm)
     plt.ylabel(feature_names[1])  # sepal width (cm)
@@ -55,6 +59,9 @@ if __name__ == '__main__':
         confusions_matrix.append(confusion_matrix)
 
     print("SETOSA VS OUTRAS accuracy:" + str(mean(accuracys)))
+
+    c = ColorMap(X_test[:, :3], Y_test[:, :3], mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF', '#AAFFB0']))
+    c.coloring(heaveside, weights[:3, :])
 
     # ------------------------------------------------------------------------------------------------------------------
     # VIRGINICA VS OUTRAS
