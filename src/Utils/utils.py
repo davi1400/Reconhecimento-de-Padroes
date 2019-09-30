@@ -1,3 +1,5 @@
+from scipy.io import arff
+from zipfile import ZipFile
 from numpy import array, zeros, where, sum
 from pandas import read_csv
 from pathlib import Path
@@ -36,6 +38,8 @@ def get_data(name, type=None):
     path = get_project_root() + "/src/DataSets/" + name
     if type == 'csv':
         data = read_csv(path, header=None)
+    if type == 'arff':
+        data = arff.loadarff(path)
 
     return data
 
@@ -95,8 +99,15 @@ def calculate_euclidian_distance(X_example, example):
     return dist
 
 
+def open_zip(filepath, name=""):
+    zfile = ZipFile(filepath)
+    zfile.extract(name, path=get_project_root() + "/src/DataSets/")
+
 
 if __name__ == '__main__':
-    data = get_data("Iris", type='csv')
-    output = get_outputs(data, 4)
-    Y = string_to_number_class(output)
+    # data = get_data("Iris", type='csv')
+    # output = get_outputs(data, 4)
+    # Y = string_to_number_class(output)
+
+    # open_zip("../DataSets/vertebral_column_data.zip", "column_3C_weka.arff")
+    data = get_data("column_3C_weka.arff", type="arff")

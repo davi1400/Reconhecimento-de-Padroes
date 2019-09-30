@@ -1,12 +1,10 @@
 """
-    Run the artificial dataset AND with perceptron algorithm
+    Run the artificial dataset OR with perceptron algorithm
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import pylab as pl
-from pandas import DataFrame
 from numpy import concatenate, mean
-from src.Utils.mock import genarete_AND
+from src.Utils.mock import generate_OR
 from src.Utils.utils import normalize, heaveside
 from src.Algorithms.Supervised.Perceptron import perceptron
 from src.Utils.ColorMap import ColorMap
@@ -15,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 
 if __name__ == '__main__':
-    X, Y = genarete_AND()
+    X, Y = generate_OR()
     p = perceptron(learning_rate=0.015, epochs=100)
     p.X, p.Y = normalize(X), Y
     p.add_bias()
@@ -28,47 +26,40 @@ if __name__ == '__main__':
         accuracys.append(accuracy)
         confusions_matrix.append(confusion_matrix)
 
-    print("AND accuracy:" + str(mean(accuracys)))
+    print("OR accuracy:" + str(mean(accuracys)))
     print("variance of accuracy " + str(np.var(accuracys)))
     print("Standard deviation of accuracy " + str(np.std(accuracys)))
 
 
+
+
+
+    # c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
+    # c.coloring(heaveside, weights)
+
     X_train, X_test, Y_train, Y_test = train_test_split(p.X, p.Y, test_size=0.2)
     c = ColorMap(X_train, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
-    c.coloring(heaveside, weights, name="andtraining")
+    c.coloring(heaveside, weights, name="ortraining")
 
 
     c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
-    c.coloring(heaveside, weights, name="andtest")
-
-    stdr = np.std(accuracys)
-
-
-    pl.matshow(confusion_matrix)
-    pl.title('Matriz de confusao\n')
-    pl.colorbar()
-    # plt.savefig('GraficoArt9')
-
-    pl.show()
-
-    plt.plot(range(20), accuracys)
-    plt.xlabel("realizações")
-    plt.ylabel("Acurácias")
-    plt.savefig("AcuracysAND")
-    plt.show()
+    c.coloring(heaveside, weights, name="ortest")
 
     plt.plot(range(20), p.variances)
     plt.xlabel("ralizações")
     plt.ylabel("variancia")
-    plt.savefig("varianceand")
+    plt.savefig("varianceor")
     plt.show()
 
     plt.plot(range(20), p.stds)
     plt.xlabel("ralizações")
     plt.ylabel("desvio padrão")
-    plt.savefig("standard deviation and")
+    plt.savefig("standard deviation or")
     plt.show()
 
 
-
-
+    plt.plot(range(20), accuracys)
+    plt.xlabel("realizações")
+    plt.ylabel("Acurácias")
+    plt.savefig("AcuracysOR")
+    plt.show()

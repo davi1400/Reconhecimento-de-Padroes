@@ -1,8 +1,12 @@
+import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from src.Utils.utils import get_inputs, get_outputs, string_to_number_class, get_data, heaveside, normalize, \
     get_accuracy, get_confusion_matrix
 from numpy.random import rand, permutation
 from numpy import where, append, ones, array, zeros
+from src.Utils.ColorMap import ColorMap
+from matplotlib.colors import ListedColormap
 
 
 class perceptron:
@@ -18,12 +22,22 @@ class perceptron:
         self.learning_rate = learning_rate
         self.epochs = epochs
         self.test_rate = test_rate
+        self.percents = []
+        self.stds = []
+        self.variances = []
+
+    def variance(self):
+        self.variances.append(np.var(self.percents))
+
+
+    def standard_deviation(self):
+        self.stds.append(np.std(self.percents))
 
 
     def add_bias(self):
         self.X = append(-1 * ones((self.X.shape[0], 1)), self.X, 1)
 
-    def train(self, batch=True):
+    def train(self, batch=True, normalizer=True):
 
         X_train, X_test, Y_train, Y_test = train_test_split(self.X, self.Y, test_size=self.test_rate)
         weights = rand(X_train.shape[1], 1)
@@ -32,8 +46,12 @@ class perceptron:
                 # Hidden = X_train.dot(weights)
                 Y_output = self.forward(X_train, weights)
                 Error = Y_train - Y_output
+
+                accuracy, confusion_matrix = self.test(weights, X_test, Y_test, confusion_matrix=True)
+                self.percents.append(accuracy)
+
                 if abs(Error).sum() == 0:
-                    print(epoch)
+                    # print(epoch)
                     break
 
                 self.backward(weights, Error, X_train)
@@ -47,7 +65,7 @@ class perceptron:
                 Error = Y_train[r[k]] - Y_output
 
                 if abs((Y_train - heaveside(X_train.dot(weights))).sum()) == 0:
-                    print(epoch)
+                    # print(epoch)
                     break
 
                 self.backward(weights, Error, X_train[r[k]], online=True)
@@ -57,6 +75,10 @@ class perceptron:
                 if k >= r.shape[0]:
                     r = permutation(X_train.shape[0])
                     k = 0
+
+        self.variance()
+        self.standard_deviation()
+        self.percents = []
 
         return weights, X_test, Y_test
 

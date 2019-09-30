@@ -24,7 +24,7 @@ class ColorMap:
         self.yy = yy
         return new
 
-    def coloring(self, G, weights, Flag=False):
+    def coloring(self, G, weights, Flag=False, name="colorMap"):
         data = self.map()
         data = np.c_[-1 * np.ones(data.shape[0]), data]
         for camada in range(self.camadas_ocultas+1):
@@ -44,7 +44,11 @@ class ColorMap:
         plt.plot(neg[:, 1], neg[:, 2], 'ro', marker='s', markeredgecolor='w')
         plt.xlabel("X1")
         plt.ylabel("X2")
+
+        plt.savefig(name)
         plt.show()
+
+
 
 
 
