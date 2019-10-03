@@ -1,0 +1,76 @@
+"""
+    Run the column data set with K-NN algorithm
+"""
+import matplotlib.pyplot as plt
+from src.Algorithms.Supervised.knearestneighbours import KNN
+from numpy import array, arange, mean, hstack
+from pandas import DataFrame
+from src.Utils.utils import get_data
+from src.Utils.CrossValidate import CrossValidation
+
+
+if __name__ == '__main__':
+    accuracys = []
+    data = get_data("Iris", type="csv")
+    data = DataFrame(data)
+    knn = KNN(data)
+    all_k = []
+
+    knn.transform_binary("Iris-setosa")
+    for realization in range(20):
+        knn.split()
+        best_k = knn.validate()
+        all_k.append(best_k)
+        knn.split()
+        Y_output, Y_test = knn.train(3)
+        accuracys.append(knn.test(Y_output, Y_test))
+        print(" # --------------------------------- #")
+        print("Realization: ", realization)
+        print("Best K: ", best_k)
+        print("Accuracy: ", accuracys[realization])
+        print(" # --------------------------------- #")
+
+
+    print("Finished Setosa x outras")
+    print("Mean accuracy: ", mean(accuracys))
+    print("Best K: ", int(mean(all_k)))
+
+    # ---------------------------------------------------------------------------------------------------------------- #
+    all_k = []
+    knn.transform_binary("Iris-virginica")
+    for realization in range(20):
+        knn.split()
+        best_k = knn.validate()
+        all_k.append(best_k)
+        knn.split()
+        Y_output, Y_test = knn.train(3)
+        accuracys.append(knn.test(Y_output, Y_test))
+        print(" # --------------------------------- #")
+        print("Realization: ", realization)
+        print("Best K: ", best_k)
+        print("Accuracy: ", accuracys[realization])
+        print(" # --------------------------------- #")
+
+    print("Finished Virginica x outras")
+    print("Mean accuracy: ", mean(accuracys))
+    print("Best K: ", int(mean(all_k)))
+
+    # ---------------------------------------------------------------------------------------------------------------- #
+    all_k = []
+    knn.transform_binary("Iris-versicolor")
+    for realization in range(20):
+        knn.split()
+        best_k = knn.validate()
+        all_k.append(best_k)
+        knn.split()
+        Y_output, Y_test = knn.train(3)
+        accuracys.append(knn.test(Y_output, Y_test))
+        print(" # --------------------------------- #")
+        print("Realization: ", realization)
+        print("Best K: ", best_k)
+        print("Accuracy: ", accuracys[realization])
+        print(" # --------------------------------- #")
+
+    print("Finished versicolor x outras")
+    print("Mean accuracy: ", mean(accuracys))
+    print("Best K: ", int(mean(all_k)))

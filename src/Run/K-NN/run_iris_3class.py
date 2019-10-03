@@ -11,28 +11,25 @@ from src.Utils.CrossValidate import CrossValidation
 
 if __name__ == '__main__':
     accuracys = []
-    all_k = []
-    data = get_data("column_3C_weka.arff", type="arff")
-    data = DataFrame(data[0])
+    data = get_data("Iris", type="csv")
+    data = DataFrame(data)
     knn = KNN(data)
+    all_k = []
 
     for realization in range(20):
         knn.split()
         best_k = knn.validate()
         all_k.append(best_k)
         knn.split()
-        Y_output, Y_test = knn.train(best_k)
+        Y_output, Y_test = knn.train(3)
         accuracys.append(knn.test(Y_output, Y_test))
         print(" # --------------------------------- #")
         print("Realization: ", realization)
         print("Best K: ", best_k)
         print("Accuracy: ", accuracys[realization])
+        print(" # --------------------------------- #")
 
 
-
-    print("Finished")
+    print("Finished Setosa x outras")
     print("Mean accuracy: ", mean(accuracys))
-    print("Best mean K: ", int(mean(all_k)))
-
-
-
+    print("Best K: ", int(mean(all_k)))

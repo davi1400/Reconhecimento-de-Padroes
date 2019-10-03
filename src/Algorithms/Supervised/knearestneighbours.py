@@ -3,10 +3,19 @@ from numpy.random import rand
 from numpy import where, array
 from src.Utils.utils import calculate_euclidian_distance, get_accuracy
 from sklearn.model_selection import train_test_split
+from src.Utils.CrossValidate import CrossValidation
+
 
 # TODO
 class KNN:
-    def __init__(self, data, test_rate=0.2):
+    def __init__(self, data=None, test_rate=0.2, features=None):
+        self.X_train = []
+        self.X_test = []
+        self.Y_train = []
+        self.Y_test = []
+        if data is None:
+            self.test_rate = test_rate
+
         self.test_rate = test_rate
         self.number_lines = data.shape[0]
         self.number_columns = data.shape[1]
@@ -15,9 +24,24 @@ class KNN:
         self.Y = string_to_number_class(self.classes)
 
 
-    def train(self):
-        X_train, X_test, Y_train, Y_test = train_test_split(self.X, self.Y, test_size=self.test_rate)
-        return self.classify(X_train, X_test, Y_train, Y_test, 3)
+    def validate(self):
+        if self.validate:
+            grid = range(1, 10, 2)
+            validation = CrossValidation(grid, self)
+            return validation.validate()
+
+
+    def split(self):
+        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y,
+                                                                                test_size=self.test_rate)
+
+    def train(self, *argv):
+        k = argv[0]
+        return self.classify(self.X_train, self.X_test, self.Y_train, self.Y_test, k)
+
+    def test(self, Y_output, Y_test):
+        accuracy = get_accuracy(array(Y_output, dtype='int', ndmin=2).T, Y_test)
+        return accuracy
 
     def classify(self, X_train, X_test, Y_train, Y_test, k):
         Y_output = []
@@ -42,5 +66,10 @@ class KNN:
                     Y_output.append(label)
                     break
 
-        accuracy = get_accuracy(array(Y_output, dtype='int', ndmin=2).T, Y_test)
-        return accuracy
+        return Y_output, Y_test
+
+    def transform_binary(self, name):
+        self.Y[where(self.classes == name)] = 0
+        self.Y[where(self.classes != name)] = 1
+
+

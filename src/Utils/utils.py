@@ -1,11 +1,21 @@
 from scipy.io import arff
 from zipfile import ZipFile
-from numpy import array, zeros, where, sum
+from numpy import array, zeros, where, sum, tanh
 from pandas import read_csv
 from pathlib import Path
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 from math import sqrt
+from scipy.special import expit
+
+
+def sigmoid(logist, y):
+    if logist:
+        # sigmoid logistica
+        return expit(y)
+    else:
+        # sigmoid tangente hiperbolica
+        return tanh(y)
 
 
 def normalize(X):
@@ -109,5 +119,5 @@ if __name__ == '__main__':
     # output = get_outputs(data, 4)
     # Y = string_to_number_class(output)
 
-    # open_zip("../DataSets/vertebral_column_data.zip", "column_3C_weka.arff")
-    data = get_data("column_3C_weka.arff", type="arff")
+    open_zip("../DataSets/vertebral_column_data.zip", "column_2C_weka.arff")
+    data = get_data("column_2C_weka.arff", type="arff")

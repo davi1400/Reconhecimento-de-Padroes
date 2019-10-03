@@ -12,7 +12,7 @@ from src.Utils.CrossValidate import CrossValidation
 if __name__ == '__main__':
     accuracys = []
     all_k = []
-    data = get_data("column_3C_weka.arff", type="arff")
+    data = get_data("column_2C_weka.arff", type="arff")
     data = DataFrame(data[0])
     knn = KNN(data)
 
