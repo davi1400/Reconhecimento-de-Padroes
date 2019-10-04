@@ -1,6 +1,6 @@
 from scipy.io import arff
 from zipfile import ZipFile
-from numpy import array, zeros, where, sum, tanh
+from numpy import array, zeros, where, sum, tanh, exp
 from pandas import read_csv
 from pathlib import Path
 from sklearn.metrics import confusion_matrix
@@ -15,7 +15,7 @@ def sigmoid(logist, y):
         return expit(y)
     else:
         # sigmoid tangente hiperbolica
-        return tanh(y)
+        return (1 - exp(-y))/(1 + exp(-y))
 
 
 def normalize(X):

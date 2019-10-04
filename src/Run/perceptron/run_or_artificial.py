@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split
 
 if __name__ == '__main__':
     X, Y = generate_OR()
-    p = perceptron(learning_rate=0.01, epochs=200, type=2, logist=True)
+    p = perceptron(learning_rate=0.015, epochs=500, type=2, logist=True)
     p.X, p.Y = normalize(X), Y
     p.add_bias()
 
@@ -38,25 +38,22 @@ if __name__ == '__main__':
     # c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
     # c.coloring(heaveside, weights)
 
-    X_train, X_test, Y_train, Y_test = train_test_split(p.X, p.Y, test_size=0.2)
-    c = ColorMap(X_train, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
-    c.coloring(heaveside, weights, name="ortraining")
 
 
     c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
-    c.coloring(heaveside, weights, name="ortest")
+    c.coloring(heaveside, weights, name="ortestL")
 
-    plt.plot(range(20), p.variances)
-    plt.xlabel("ralizações")
-    plt.ylabel("variancia")
-    plt.savefig("varianceor")
-    plt.show()
-
-    plt.plot(range(20), p.stds)
-    plt.xlabel("ralizações")
-    plt.ylabel("desvio padrão")
-    plt.savefig("standard deviation or")
-    plt.show()
+    # plt.plot(range(20), p.variances)
+    # plt.xlabel("ralizações")
+    # plt.ylabel("variancia")
+    # plt.savefig("varianceor")
+    # plt.show()
+    #
+    # plt.plot(range(20), p.stds)
+    # plt.xlabel("ralizações")
+    # plt.ylabel("desvio padrão")
+    # plt.savefig("standard deviation or")
+    # plt.show()
 
 
     plt.plot(range(20), accuracys)
@@ -89,27 +86,25 @@ if __name__ == '__main__':
     # c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
     # c.coloring(heaveside, weights)
 
-    X_train, X_test, Y_train, Y_test = train_test_split(p.X, p.Y, test_size=0.2)
-    c = ColorMap(X_train, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
-    c.coloring(heaveside, weights, name="ortraining")
+
 
     c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
-    c.coloring(heaveside, weights, Flag=True, name="ortest")
+    c.coloring(heaveside, weights, Flag=True, name="ortestT")
 
-    plt.plot(range(20), p.variances)
-    plt.xlabel("ralizações")
-    plt.ylabel("variancia")
-    plt.savefig("varianceor")
-    plt.show()
-
-    plt.plot(range(20), p.stds)
-    plt.xlabel("ralizações")
-    plt.ylabel("desvio padrão")
-    plt.savefig("standard deviation or")
-    plt.show()
+    # plt.plot(range(20), p.variances)
+    # plt.xlabel("ralizações")
+    # plt.ylabel("variancia")
+    # plt.savefig("varianceor")
+    # plt.show()
+    #
+    # plt.plot(range(20), p.stds)
+    # plt.xlabel("ralizações")
+    # plt.ylabel("desvio padrão")
+    # plt.savefig("standard deviation or")
+    # plt.show()
 
     plt.plot(range(20), accuracys)
     plt.xlabel("realizações")
     plt.ylabel("Acurácias")
-    plt.savefig("AcuracysOR")
+    plt.savefig("AcuracysORTH")
     plt.show()

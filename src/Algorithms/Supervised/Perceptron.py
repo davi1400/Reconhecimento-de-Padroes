@@ -157,9 +157,13 @@ class perceptron:
 
         return weights
 
-    def transform_binary(self, name):
-        self.Y[where(self.classes == name)] = 0
-        self.Y[where(self.classes != name)] = 1
+    def transform_binary(self, name, flag=False):
+        if flag:
+            self.Y[where(self.classes == name)] = 1
+            self.Y[where(self.classes != name)] = -1
+        else:
+            self.Y[where(self.classes == name)] = 1
+            self.Y[where(self.classes != name)] = 0
 
     def get_derivate(self, *argv):
         if self.type == 1:
@@ -172,7 +176,7 @@ class perceptron:
                 return derivate
             else:
                 # derivate of sigmoid hyperbolic tangent
-                derivate = (1 - Y**2)
+                derivate = 0.5*(1 - Y**2)
                 return derivate
 
 

@@ -11,14 +11,18 @@ from numpy import reshape, array, mean
 from sklearn.datasets import load_iris
 from src.Utils.ColorMap import ColorMap
 from matplotlib.colors import ListedColormap
-from src.Utils.utils import heaveside,  normalize
+from src.Utils.utils import heaveside, normalize
 
 #  just for the plot
 IRIS = load_iris()
 
+"""
+    Utilizando simgmoid logistica
+"""
+
 if __name__ == '__main__':
     data = get_data("Iris", type='csv')
-    p = perceptron(data, 0.015, 500)
+    p = perceptron(data, 0.015, 500, type=2, logist=True)
     p.X = normalize(p.X)
     p.add_bias()
     feature_names = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
@@ -49,10 +53,13 @@ if __name__ == '__main__':
 
     # ------------------------------------------------------------------------------------------------------------------
     # SETOSA VS OUTRAS
+    print("# --------------------------------------- #")
+    print("Sigmoid L")
     accuracys = []
     confusions_matrix = []
     p.transform_binary("Iris-setosa")
     for realization in range(20):
+        p.split()
         weights, X_test, Y_test = p.train()
         accuracy, confusion_matrix = p.test(weights, X_test, Y_test, confusion_matrix=True)
         accuracys.append(accuracy)
@@ -61,7 +68,6 @@ if __name__ == '__main__':
     print("SETOSA VS OUTRAS accuracy:" + str(mean(accuracys)))
     print("Standard deviation of accuracy " + str(np.std(accuracys)))
     print("variance of accuracy " + str(np.var(accuracys)))
-
 
     pl.matshow(confusion_matrix)
     pl.title('Matriz de confusao\n')
@@ -88,7 +94,6 @@ if __name__ == '__main__':
     plt.savefig("standard deviation setosaXoutras")
     plt.show()
 
-
     # ------------------------------------------------------------------------------------------------------------------
     # Training just two features
     accuracys = []
@@ -97,6 +102,7 @@ if __name__ == '__main__':
     p.transform_binary("Iris-setosa")
     print("Training two features - SETOSA width and SETOSA lenth")
     for realization in range(20):
+        p.split()
         weights, X_test, Y_test = p.train()
         accuracy, confusion_matrix = p.test(weights, X_test, Y_test, confusion_matrix=True)
         accuracys.append(accuracy)
@@ -109,13 +115,13 @@ if __name__ == '__main__':
     c = ColorMap(X_test, Y_test, mapa_cor=ListedColormap(['#FFAAAA', '#AAAAFF']))
     c.coloring(heaveside, weights)
 
-
     # ------------------------------------------------------------------------------------------------------------------
     # VIRGINICA VS OUTRAS
     accuracys = []
     confusions_matrix = []
     p.transform_binary("Iris-virginica")
     for realization in range(20):
+        p.split()
         weights, X_test, Y_test = p.train()
         accuracy, confusion_matrix = p.test(weights, X_test, Y_test, confusion_matrix=True)
         accuracys.append(accuracy)
@@ -131,6 +137,7 @@ if __name__ == '__main__':
     confusions_matrix = []
     p.transform_binary("Iris-versicolor")
     for realization in range(20):
+        p.split()
         weights, X_test, Y_test = p.train()
         accuracy, confusion_matrix = p.test(weights, X_test, Y_test, confusion_matrix=True)
         accuracys.append(accuracy)
@@ -141,3 +148,6 @@ if __name__ == '__main__':
     print("variance of accuracy " + str(np.var(accuracys)))
 
 #  print(confusions_matrix)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
