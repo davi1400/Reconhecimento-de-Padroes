@@ -119,5 +119,5 @@ if __name__ == '__main__':
     # output = get_outputs(data, 4)
     # Y = string_to_number_class(output)
 
-    open_zip("../DataSets/vertebral_column_data.zip", "column_2C_weka.arff")
+    open_zip("../DataSets/hotel-reviews-city-chennai.zip", "chennai_reviews.csv")
     data = get_data("column_2C_weka.arff", type="arff")
