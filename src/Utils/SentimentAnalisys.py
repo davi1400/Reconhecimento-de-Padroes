@@ -23,10 +23,14 @@ class SentimentAnalisys:
         return vocabulary
 
     @staticmethod
-    def text_to_vector(row, text, bag_of_words):
+    def text_to_vector(row, text, sentiment, bag_of_words, i):
         text_filtered = SentimentAnalisys.filter_stopwords(text)
+        bag_of_words = numpy.array(bag_of_words, ndmin=2)
         for word in text_filtered:
-            row[numpy.where(word in bag_of_words)[0][0]] += 1
+            row[numpy.where(word == bag_of_words)[1][0]] += 1
+
+        row[len(row) - 1] = sentiment
+        # print(row[len(row) - 1], sentiment, i)
         return row
 
     @staticmethod
