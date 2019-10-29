@@ -1,4 +1,4 @@
-from numpy import zeros, concatenate, array, where, log, argmax
+from numpy import zeros, concatenate, array, where, log, argmax, inf
 
 
 class NaiveBayes:
@@ -43,19 +43,6 @@ class NaiveBayes:
                 .
                 P(Y=N) is in position N-1 of the vector
                 
-           P_xy = {
-            word : {
-                '1': p(word/'1'),
-                '2': p(word/'2'),
-                .
-                .
-                ,
-                'N': p(word/N)
-            }
-            .
-            .
-            .
-        }
         """
         P_xy = {}
         thetas_ic = zeros((len(self.bag), N_class))
@@ -64,31 +51,37 @@ class NaiveBayes:
                                                     self.Matrix[:, self.Matrix.shape[1]-1:]), axis=1)
 
             for c in range(N_class):
-                indices = where(frequence_word_sentiment[:, 1:] == c)
-                theta_word_c = sum(frequence_word_sentiment[indices])/(1.0*len(indices[0]))
+                indices = where(frequence_word_sentiment[:, 1:] == c+1)
+                theta_word_c = (sum(frequence_word_sentiment[indices]) + 1)/(1.0*len(indices[0]) + 2.0)
+                #if theta_word_c == 0.0:
+                    # theta_word_c += (1./2.)
+                #    pass
                 thetas_ic[i][c] = theta_word_c
 
         return thetas_ic, thetas_c
 
-    def test(self, thetas, x):
-        thetas_ic = array(thetas[1:])
-        p_y = log(thetas[0])
-        P_xy = zeros((thetas_ic.shape[1], 1))
+    def test(self, row, thetas_ic, thetas_c):
+        _len = len(row)
+        P_yx = zeros((thetas_c.shape[0], 1))
 
-        for c in range(thetas_ic.shape[1]):
-            i = 0
-            for theta_i in thetas_ic[:, c]:
-                if theta_i > 0.0:
-                    P_xy[c] += log(self.bernolli(theta_i, x[i]))
-                i += 1
+        for c in range(thetas_c.shape[0]):
+            P_y = log(thetas_c[c][0])
+            for i in range(_len-1):
+                theta_ic = thetas_ic[i, c]
+                x_i = row[i]
+                if self.bernolli(theta_ic, x_i) == -1.0*inf:
+                    continue
+                P_yx[c] += self.bernolli(theta_ic, x_i)
+            P_yx += P_y
 
-        return p_y + P_xy
+        return P_yx
 
     def predict(self, p):
         return argmax(p)
 
     def bernolli(self, theta_i, x_i):
-        return (theta_i**x_i)*((1 - theta_i)**(1-x_i))
+        return x_i*log(theta_i) + (1.0-x_i)*log(1.0-theta_i)
+        # return (theta_i**x_i)*((1.0 - theta_i)**(1.0-x_i))
 
 
 
