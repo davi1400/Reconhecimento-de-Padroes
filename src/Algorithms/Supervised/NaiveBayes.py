@@ -2,18 +2,30 @@ from numpy import zeros, concatenate, array, where, log, argmax, inf
 
 
 class NaiveBayes:
-    def __init__(self, Matrix, reviews, bag):
+    def __init__(self, Matrix, reviews, bag, type=None):
         """
         Obs: The indidice of the bag that contais the word i, is the same for the matriz, that contais the word j, but
         in the matriz j is a colummn
+
+        Matrix is for training
         :param Matrix: Matrix de contagem com label no final
         """
 
         self.Matrix = Matrix
         self.reviews = reviews
         self.bag = bag
+        self.type = type
 
     def train(self):
+        if self.type == "bernolli":
+            return self.train_bernolli()
+        if self.type == "gaussian":
+            return self.train_gaussian()
+
+    def train_gaussian(self):
+        pass
+
+    def train_bernolli(self):
         """
 
         :return:
@@ -52,10 +64,9 @@ class NaiveBayes:
 
             for c in range(N_class):
                 indices = where(frequence_word_sentiment[:, 1:] == c+1)
-                theta_word_c = (sum(frequence_word_sentiment[indices]) + 1)/(1.0*len(indices[0]) + 2.0)
-                #if theta_word_c == 0.0:
-                    # theta_word_c += (1./2.)
-                #    pass
+                theta_word_c = (sum(frequence_word_sentiment[indices]))/(1.0*len(indices[0]))
+                if theta_word_c == 0.0:
+                    theta_word_c = 1e-5
                 thetas_ic[i][c] = theta_word_c
 
         return thetas_ic, thetas_c
@@ -80,8 +91,12 @@ class NaiveBayes:
         return argmax(p)
 
     def bernolli(self, theta_i, x_i):
+        if x_i > 1.:
+            x_i = 1.0
         return x_i*log(theta_i) + (1.0-x_i)*log(1.0-theta_i)
-        # return (theta_i**x_i)*((1.0 - theta_i)**(1.0-x_i))
+
+    def gausian(self):
+        pass
 
 
 
