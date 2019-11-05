@@ -24,7 +24,7 @@ if __name__ == '__main__':
     accuracys = []
     accuracys_train = []
 
-    for realization in range(5):
+    for realization in range(10):
         hit = 0
         reviews_train, reviews_test = train_test_split(array(data[[2, 3]])[1:], test_size=0.2)
         Matrix_train = pre_processing(reviews_train, bag)
@@ -37,6 +37,7 @@ if __name__ == '__main__':
             if Y_output == Y_expected:
                 hit += 1
         accuracys_train.append(hit / (Matrix_train.shape[0] * 1.0))
+        print("Realization", realization, "accuracy train: ", hit / (Matrix_train.shape[0] * 1.0))
 
         # ----------------------------------------------------------------------------------------------------------- #
         # test
@@ -51,5 +52,7 @@ if __name__ == '__main__':
 
         accuracys.append(hit/(Matrix_test.shape[0]*1.0))
 
+        print("Realization", realization, "accuracy test: ", hit/(Matrix_test.shape[0]*1.0))
+
     print("Acuracias de teste: ", mean(accuracys))
-    print("Acuraica de treinamento: ", (mean(accuracys_train))) 
+    print("Acuraica de treinamento: ", (mean(accuracys_train)))

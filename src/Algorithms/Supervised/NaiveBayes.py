@@ -22,8 +22,17 @@ class NaiveBayes:
         if self.type == "gaussian":
             return self.train_gaussian()
 
-    def train_gaussian(self):
-        pass
+    def train_gaussian(self, train):
+
+        N_class = max(train[:, train.shape[0] - 1:])
+        Matrix_Mean = zeros((train.shape[1], N_class)).T
+        Variance_Matrix = zeros((train.shape[1], N_class)).T
+
+        for c in N_class:
+            N_y = len(where(train[:, train.shape[0]-1:] == c)[0])
+            for i in range(train.shape[1]):
+                indices = where(train[:, train.shape[0] - 1:] == c)
+                Matrix_Mean[c][i] = (1./(1.*N_y))*sum(train[indices])
 
     def train_bernolli(self):
         """

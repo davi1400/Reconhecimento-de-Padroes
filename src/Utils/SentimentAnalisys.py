@@ -50,9 +50,9 @@ class SentimentAnalisys:
             """
                 Geting just the adjectives and adverbs of the text
             """
-            # if pos_tag in ["JJ", "JJR", "JJS", "RB", "RBS", "RBR", "ADJ", "ADV", "NN", "VB"]:
+            if pos_tag in ["JJ", "JJR", "JJS", "RB", "RBS", "RBR", "ADJ", "ADV", "NN", "VB"]:
 
-            text_fiter.append(word)
+                text_fiter.append(word)
 
         return text_fiter
 
