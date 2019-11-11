@@ -31,7 +31,7 @@ if __name__ == '__main__':
         naive = NaiveBayes(Matrix_train, reviews_train, bag, type="bernolli")
         thetas_ic, thetas_c = naive.train()
         for row in Matrix_train:
-            p = naive.test(row, thetas_ic, thetas_c)
+            p = naive.test(row=row, thetas_ic=thetas_ic, thetas_c=thetas_c)
             Y_output = naive.predict(p)+1
             Y_expected = int(row[len(row)-1])
             if Y_output == Y_expected:
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         Matrix_test = pre_processing(reviews_test, bag, type=None)
         hit = 0
         for row in Matrix_test:
-            p = naive.test(row, thetas_ic, thetas_c)
+            p = naive.test(row=row, thetas_ic=thetas_ic, thetas_c=thetas_c)
             Y_output = naive.predict(p)+1
             Y_expected = int(row[len(row)-1])
             if Y_output == Y_expected:
