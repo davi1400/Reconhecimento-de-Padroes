@@ -15,12 +15,16 @@ class LogisticRegression:
         Wheigts = rand(N_features, 1)
 
         for epoch in range(self.ephocs):
-            u = array(y_train, ndmin=2).T*(x_train.dot(Wheigts))
-            H = sigmoid(True, u)
+            if array(y_train, ndmin=2).shape[1] != 1:
+                aux_y = array(y_train, ndmin=2).T
+            else:
+                aux_y = array(y_train, ndmin=2)
+            u = aux_y * (x_train.dot(Wheigts))
+            H = sigmoid(True, -u)
             Y = self.predict(H)
 
             # Error = Y - array(y_train, ndmin=2).T
-            Error = log(1 - exp(-1.*u))
+            Error = log(1 - exp(-1. * u))
 
             Wheigts += self.gradient_descent(x_train, y_train, u, Error)
 
@@ -33,17 +37,29 @@ class LogisticRegression:
         H = sigmoid(True, u)
         Y = self.predict(H)
 
-        accuracy = sum(Y == array(y_test, ndmin=2).T) / (1.0 * len(y_test))
+        if array(y_test, ndmin=2).shape[1] != 1:
+            aux_y = array(y_test, ndmin=2).T
+        else:
+            aux_y = array(y_test, ndmin=2)
+
+        accuracy = sum(Y == aux_y) / (1.0 * len(y_test))
 
         return accuracy
 
     def gradient_descent(self, X, Y, U, error):
-        derivate = sum((array(Y, ndmin=2).T*X)/(1 + exp(U)))
-        return array(self.eta*derivate, ndmin=2).T
+        if array(Y, ndmin=2).shape[1] != 1:
+            aux_y = array(Y, ndmin=2).T
+        else:
+            aux_y = array(Y, ndmin=2)
+
+        derivate = sum((aux_y * X) / (1 + exp(U)))
+        return array(self.eta * derivate, ndmin=2).T
 
     def predict(self, u):
         Y_output = zeros((u.shape[0], 1))
-        indices_1 = where(u >= (1 - u))
-        Y_output[indices_1] = 1
+        indices_j = where((1 - u) > u)
+        indices_i = where(u > (1 - u))
+        Y_output[indices_j] = -1
+        Y_output[indices_i] = 1
 
         return Y_output

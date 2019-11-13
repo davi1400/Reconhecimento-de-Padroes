@@ -12,8 +12,6 @@ class ColorMap:
         self.xx = None
         self.yy = None
 
-
-
     def map(self):
         x_min, x_max = self.X[:, 1].min() - 1, self.X[:, 1].max() + 1
         y_min, y_max = self.X[:, 2].min() - 1, self.X[:, 2].max() + 1
