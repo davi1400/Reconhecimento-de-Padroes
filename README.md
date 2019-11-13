@@ -4,7 +4,9 @@
 * Codigos em python para aprendizado de maquina
 ```sh
 Perceptron
-k-nearest-neighbours ...
+k-nearest-neighbours
+Naive Bayes
+Logistic Regression
 ```
 
 
