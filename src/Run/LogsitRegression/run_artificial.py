@@ -4,26 +4,29 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from src.Utils.utils import normalize
 from src.Algorithms.Supervised.LogisticRegression import LogisticRegression
+
 pi = math.pi
 
-def points_in_circles(r,z=2,raio=20):
+
+def points_in_circles(r, z=2, raio=20):
     out = []
-    for i in range(-r*z,r*z,1):
-        for j in range(-r*z,r*z,1):
-            if (math.sqrt((i/z)**2 + (j/z)**2) <= raio):
-                out.append(((i/z),(j/z)))
+    for i in range(-r * z, r * z, 1):
+        for j in range(-r * z, r * z, 1):
+            if (math.sqrt((i / z) ** 2 + (j / z) ** 2) <= raio):
+                out.append(((i / z), (j / z)))
 
     return out
 
+
 if __name__ == '__main__':
 
-    points = points_in_circles(100,z=1)
-    points2 = points_in_circles(100,z=1,raio=10)
+    points = points_in_circles(100, z=1)
+    points2 = points_in_circles(100, z=1, raio=10)
 
     for i in points2:
         points.pop(points.index(i))
     x = []
-    y =[]
+    y = []
     for point in points:
         x.append(point[0])
         y.append(point[1])
@@ -33,29 +36,29 @@ if __name__ == '__main__':
     for i in y:
         y[y.index(i)] = y[y.index(i)] + np.random.rand()
 
-    for i in range(int(len(x)/4)):
-        x.pop(np.random.randint(0,len(x)))
+    for i in range(int(len(x) / 4)):
+        x.pop(np.random.randint(0, len(x)))
 
     for i in range(int(len(y) / 4)):
         y.pop(np.random.randint(0, len(y)))
-    x1 = np.add(x[:int(len(x)//2)],-2)
-    y1 = np.subtract(y[:int(len(x)//2)],-5.5)
-    z1 = [1]*len(x1)
+    x1 = np.add(x[:int(len(x) // 2)], -2)
+    y1 = np.subtract(y[:int(len(x) // 2)], -5.5)
+    z1 = [1] * len(x1)
 
-    matrix1 = np.array(list(zip(y1,x1,z1)))
+    matrix1 = np.array(list(zip(y1, x1, z1)))
 
-    x2 = np.add(x[int(len(x)//2):],2)
-    y2 = np.subtract(y[int(len(x)//2):],5.5)
-    z2 = [-1]*len(x2)
+    x2 = np.add(x[int(len(x) // 2):], 2)
+    y2 = np.subtract(y[int(len(x) // 2):], 5.5)
+    z2 = [-1] * len(x2)
 
-    matrix2 = np.array(list(zip(y2,x2,z2)))
+    matrix2 = np.array(list(zip(y2, x2, z2)))
 
-
-    plt.scatter(y1,x1,c='darkturquoise')
-    plt.scatter(y2,x2,c='sandybrown')
+    plt.scatter(y1, x1, c='darkturquoise')
+    plt.scatter(y2, x2, c='sandybrown')
+    plt.savefig('GraficoArtY')
     plt.show()
 
-    data = np.concatenate((matrix1,matrix2),axis=0)
+    data = np.concatenate((matrix1, matrix2), axis=0)
     np.random.shuffle(data)
     print(data)
     print(data.shape)
@@ -79,7 +82,5 @@ if __name__ == '__main__':
     plt.scatter(y1, x1, c='darkturquoise')
     plt.scatter(y2, x2, c='sandybrown')
     plt.plot(plot_x, plot_y, color='k', linewidth=2)
-    # plt.savefig('GraficoArt7')
+    plt.savefig('GraficoArtX')
     plt.show()
-
-

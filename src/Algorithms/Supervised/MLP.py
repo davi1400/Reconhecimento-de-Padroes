@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 # TODO revisar essa classe antiga que eu fiz
 class MultiLayerPerceptron:
     def __init__(self, N_Padroes, N_Neruronios, N_Classes, lr, Regressao=False):
-        self.Pesos_saida = np.random.rand(self.N_Classes, self.N_Neruronios + 1)  # (cxH)
-        self.Pesos_ocultos = np.random.rand(self.N_Neruronios, self.N_Padroes)  # (Hxp)
         self.N_Padroes = int(N_Padroes)
         self.N_Neruronios = int(N_Neruronios)
         self.N_Classes = int(N_Classes)
         self.lr = lr
         self.key = Regressao
+        self.Pesos_saida = np.random.rand(self.N_Classes, self.N_Neruronios + 1)  # (cxH)
+        self.Pesos_ocultos = np.random.rand(self.N_Neruronios, self.N_Padroes)  # (Hxp)
 
     def predicao(self, Y):
         y = np.zeros((Y.shape[0], 1))

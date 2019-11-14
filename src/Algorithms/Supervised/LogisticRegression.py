@@ -26,6 +26,7 @@ class LogisticRegression:
             # Error = Y - array(y_train, ndmin=2).T
             Error = log(1 - exp(-1. * u))
 
+
             Wheigts += self.gradient_descent(x_train, y_train, u, Error)
 
         return Wheigts
@@ -52,7 +53,7 @@ class LogisticRegression:
         else:
             aux_y = array(Y, ndmin=2)
 
-        derivate = sum((aux_y * X) / (1 + exp(U)))
+        derivate = (sum((aux_y * X) / (1 + exp(U))))*(1./len(aux_y))
         return array(self.eta * derivate, ndmin=2).T
 
     def predict(self, u):
