@@ -67,16 +67,19 @@ if __name__ == '__main__':
     logistic = LogisticRegression(eta=1e-1, ephocs=1000)
     accuracys = []
 
-    for realization in range(10):
+    for realization in range(20):
         X_train, X_test, Y_train, Y_test = train_test_split(data[:, :2], data[:, 2:], test_size=0.2)
         W = logistic.train(X_train, Y_train)
         accuracys.append(logistic.test(W, X_test, Y_test))
 
     print(np.mean(accuracys))
+    print(np.mean(logistic.errros))
+    print(np.std(logistic.errros))
+    print(np.var(logistic.errros))
 
-    point = np.array([10, -10], ndmin=2)
-    y = np.array([1], ndmin=2)
-    print(logistic.test(W, point, y))
+    # point = np.array([10, -10], ndmin=2)
+    # y = np.array([1], ndmin=2)
+    # print(logistic.test(W, point, y))
 
     # plot_x = np.array([np.min(X_test[:, 0] - 10), np.max(X_test[:, 1]) + 10])
     # plot_y = - 1 / W[2] * (W[1] * plot_x + W[0])

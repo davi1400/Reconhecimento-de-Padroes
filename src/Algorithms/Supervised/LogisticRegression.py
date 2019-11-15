@@ -28,14 +28,12 @@ class LogisticRegression:
             Error = sum(log(1 + exp(-1. * u)))
             if Error <= 1.:
                 self.errros.append(Error)
-                print("Best", Error)
                 return Wheigts
 
 
             Wheigts += self.gradient_descent(x_train, y_train, u, Error)
 
         self.errros.append(Error)
-        print(Error)
         return Wheigts
 
     def test(self, Wheigts, x_test, y_test, flag=False):
