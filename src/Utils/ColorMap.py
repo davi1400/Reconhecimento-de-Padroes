@@ -13,8 +13,9 @@ class ColorMap:
         self.yy = None
 
     def map(self):
-        x_min, x_max = self.X[:, 1].min() - 1, self.X[:, 1].max() + 1
-        y_min, y_max = self.X[:, 2].min() - 1, self.X[:, 2].max() + 1
+        max_len = self.X.shape[1]
+        x_min, x_max = self.X[:, max_len-2].min() - 1, self.X[:, max_len-2].max() + 1
+        y_min, y_max = self.X[:, max_len-1].min() - 1, self.X[:, max_len-1].max() + 1
         xx, yy = np.meshgrid(np.arange(x_min, x_max, self.H),
                              np.arange(y_min, y_max, self.H))
         new = np.c_[xx.ravel(), yy.ravel()]
@@ -23,6 +24,7 @@ class ColorMap:
         return new
 
     def coloring(self, G, weights, Flag=False, name="colorMap"):
+        max_len = self.X.shape[1]
         data = self.map()
         data = np.c_[-1 * np.ones(data.shape[0]), data]
         for camada in range(self.camadas_ocultas+1):
@@ -38,8 +40,8 @@ class ColorMap:
             Z = Y_predict.reshape(self.xx.shape)
 
         plt.pcolormesh(self.xx, self.yy, Z, cmap=self.mapa_cor)
-        plt.plot(pos[:, 1], pos[:, 2], 'bo', marker='s', markeredgecolor='w')
-        plt.plot(neg[:, 1], neg[:, 2], 'ro', marker='s', markeredgecolor='w')
+        plt.plot(pos[:, max_len-2], pos[:, max_len-1], 'bo', marker='s', markeredgecolor='w')
+        plt.plot(neg[:, max_len-2], neg[:, max_len-1], 'ro', marker='s', markeredgecolor='w')
         plt.xlabel("X1")
         plt.ylabel("X2")
 

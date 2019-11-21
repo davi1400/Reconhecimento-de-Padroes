@@ -3,8 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from src.Utils.utils import normalize
+from src.Utils.ColorMap import ColorMap
 from src.Algorithms.Supervised.LogisticRegression import LogisticRegression
-
+from matplotlib.colors import ListedColormap
+from scipy.special import expit
 pi = math.pi
 
 
@@ -84,3 +86,7 @@ if __name__ == '__main__':
     plt.plot(plot_x, plot_y, color='k', linewidth=2)
     plt.savefig('GraficoArtX')
     plt.show()
+
+    Mapa_Cor = ListedColormap(['#FFAAAA', '#AAAAFF'])
+    c = ColorMap(X_test, Y_test, mapa_cor=Mapa_Cor)
+    c.coloring(expit, W, Flag=True)

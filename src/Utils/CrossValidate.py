@@ -19,7 +19,6 @@ class CrossValidation:
         else:
             self.flag = False
 
-
     def validate(self):
         best_one = self.grid_search()
         return best_one
