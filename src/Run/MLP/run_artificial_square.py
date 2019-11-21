@@ -114,4 +114,5 @@ if __name__ == '__main__':
     plt.plot(neg[:, 0], neg[:, 1], 'ro', marker='s', markeredgecolor='w')
     plt.xlabel("X1")
     plt.ylabel("X2")
+    plt.savefig("XZ")
     plt.show()

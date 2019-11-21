@@ -7,6 +7,7 @@ class LogisticRegression:
     def __init__(self, eta=0.1, ephocs=100):
         self.eta = eta
         self.ephocs = ephocs
+        self.errros = []
 
     def train(self, x_train, y_train):
         bias = -1. * ones((x_train.shape[0]))
@@ -24,19 +25,26 @@ class LogisticRegression:
             Y = self.predict(H)
 
             # Error = Y - array(y_train, ndmin=2).T
-            Error = log(1 - exp(-1. * u))
+            Error = sum(log(1 + exp(-1. * u)))
+            if Error <= 1.:
+                self.errros.append(Error)
+                return Wheigts
 
 
             Wheigts += self.gradient_descent(x_train, y_train, u, Error)
 
+        self.errros.append(Error)
         return Wheigts
 
-    def test(self, Wheigts, x_test, y_test):
+    def test(self, Wheigts, x_test, y_test, flag=False):
         bias = -1. * ones((x_test.shape[0]))
         x_test = concatenate((array(bias, ndmin=2).T, x_test), axis=1)
         u = x_test.dot(Wheigts)
         H = sigmoid(True, u)
         Y = self.predict(H)
+
+        if flag:
+            return Y
 
         if array(y_test, ndmin=2).shape[1] != 1:
             aux_y = array(y_test, ndmin=2).T
@@ -44,6 +52,7 @@ class LogisticRegression:
             aux_y = array(y_test, ndmin=2)
 
         accuracy = sum(Y == aux_y) / (1.0 * len(y_test))
+
 
         return accuracy
 
