@@ -63,6 +63,7 @@ if __name__ == '__main__':
 
     plt.scatter(points[:, 0], points[:, 1], c='darkturquoise')
     plt.scatter(points2[:, 0], points2[:, 1], c='sandybrown')
+    plt.savefig('artificial_square')
 
     plt.show()
     print(data)
@@ -96,22 +97,22 @@ if __name__ == '__main__':
     # ------------------------------------------------------------------------------------------------
     # Plot
     h = .02
-    Mapa_Cor = ListedColormap(['#FFAAAA', '#AAAAFF'])
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    Mapa_Cor = ListedColormap(['#F4A460', '#00ced1'])
+    x_min, x_max = X_test[:, 0].min() - 1, X_test[:, 0].max() + 1
+    y_min, y_max = X_test[:, 1].min() - 1, X_test[:, 1].max() + 1
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
     new = np.c_[xx.ravel(), yy.ravel()]
     #
 
-    Z = Rede.Saida(new)
+    Z = Rede.Saida(new[:12960])
     pos = X_test[np.where(Rede.predicao(Y_test) == 1)[0]]
     neg = X_test[np.where(Rede.predicao(Y_test) == 0)[0]]
     # Z = Rede.predicao(Z.T)
     Z = Z.reshape(xx.shape)
     plt.pcolormesh(xx, yy, Z, cmap=Mapa_Cor)
-    plt.plot(pos[:, 0], pos[:, 1], 'bo', marker='s', markeredgecolor='w')
-    plt.plot(neg[:, 0], neg[:, 1], 'ro', marker='s', markeredgecolor='w')
+    plt.plot(pos[:, 0], pos[:, 1], 'co', marker='s', markeredgecolor='w')
+    plt.plot(neg[:, 0], neg[:, 1], '#F4A460', marker='s', markeredgecolor='w')
     plt.xlabel("X1")
     plt.ylabel("X2")
     plt.savefig("XZ")

@@ -23,7 +23,9 @@ class ColorMap:
         self.yy = yy
         return new
 
-    def coloring(self, G, weights, Flag=False, name="colorMap"):
+    def coloring(self, G, weights, Flag=False, name="colorMap", colors=None):
+        if colors is None:
+            colors = ['bo', 'ro']
         max_len = self.X.shape[1]
         data = self.map()
         data = np.c_[-1 * np.ones(data.shape[0]), data]
@@ -40,8 +42,8 @@ class ColorMap:
             Z = Y_predict.reshape(self.xx.shape)
 
         plt.pcolormesh(self.xx, self.yy, Z, cmap=self.mapa_cor)
-        plt.plot(pos[:, max_len-2], pos[:, max_len-1], 'bo', marker='s', markeredgecolor='w')
-        plt.plot(neg[:, max_len-2], neg[:, max_len-1], 'ro', marker='s', markeredgecolor='w')
+        plt.plot(pos[:, max_len-2], pos[:, max_len-1], colors[0], marker='s', markeredgecolor='w')
+        plt.plot(neg[:, max_len-2], neg[:, max_len-1], colors[1], marker='s', markeredgecolor='w')
         plt.xlabel("X1")
         plt.ylabel("X2")
 

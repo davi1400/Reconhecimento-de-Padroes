@@ -49,7 +49,7 @@ def get_data(name, type=None):
     if type == 'csv':
         data = read_csv(path, header=None)
     if type == 'arff':
-        data = arff.loadarff(path)
+        data, meta = arff.loadarff(path)
 
     return data
 
@@ -119,5 +119,5 @@ if __name__ == '__main__':
     # output = get_outputs(data, 4)
     # Y = string_to_number_class(output)
 
-    open_zip("../DataSets/hotel-reviews-city-chennai.zip", "chennai_reviews.csv")
-    data = get_data("column_2C_weka.arff", type="arff")
+    open_zip("../DataSets/vertebral_column_data.zip", "column_3C_weka.arff")
+    data = get_data("column_3C_weka.arff", type="arff")

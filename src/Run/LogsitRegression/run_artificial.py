@@ -87,6 +87,6 @@ if __name__ == '__main__':
     plt.savefig('GraficoArtX')
     plt.show()
 
-    Mapa_Cor = ListedColormap(['#FFAAAA', '#AAAAFF'])
+    Mapa_Cor = ListedColormap(['#F4A460', '#00ced1'])
     c = ColorMap(X_test, Y_test, mapa_cor=Mapa_Cor)
-    c.coloring(expit, W, Flag=True)
+    c.coloring(expit, W, Flag=True, colors=['co', '#F4A460'])

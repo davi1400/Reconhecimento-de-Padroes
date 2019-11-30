@@ -31,7 +31,7 @@ class MultiLayerPerceptron:
     def Saida(self, X):
         # 1. Fase de Propagação
         H_Oculto = self.Sigmoid(self.Pesos_ocultos.dot(X.T))  # (Hxn)
-        if self.N_Classes > 1:
+        if self.N_Classes >= 1:
             G_Saida = (
                 self.Sigmoid(self.Pesos_saida.dot((np.c_[-1 * np.ones(H_Oculto.shape[1]), H_Oculto.T]).T))).T  # (cxn)
             return self.predicao(G_Saida)
