@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.random import uniform
 import matplotlib.pyplot as plt
 
 
@@ -25,8 +26,6 @@ def genarete_AND():
     # plt.savefig("../Relatórios/images/AND")
 
     plt.show()
-
-
 
     return [X, Y]
 
@@ -56,7 +55,64 @@ def generate_OR():
     return [X, Y]
 
 
+def create_mock(N):
+    x1 = [uniform(-1, 1), uniform(-1, 1)]
+    x2 = [uniform(-1, 1), uniform(-1, 1)]
+
+    angular_coefficient = ((x2[1] - x1[1]) * 1.) / ((x2[0] - x1[0]) * 1.)
+    linear_coefficient = -1. * angular_coefficient * x1[0] + x1[1]
+
+    if angular_coefficient * x2[0] + linear_coefficient == x2[1]:
+        print("OK")
+    else:
+        return None, None
+
+    data = np.zeros((N, 3))
+
+    for i in range(N):
+        X = [uniform(-1, 1), uniform(-1, 1)]
+        y = angular_coefficient * X[0] + linear_coefficient - X[1]
+
+        data[i, 0] = X[0]
+        data[i, 1] = X[1]
+
+        if y > 0:
+            data[i, 2] = 1
+        elif y < 0:
+            data[i, 2] = -1
+
+    out_of_data_points = np.zeros((N*10, 3))
+    for i in range(N*10):
+        X = [uniform(-1, 1), uniform(-1, 1)]
+        y = angular_coefficient * X[0] + linear_coefficient - X[1]
+
+        out_of_data_points[i, 0] = X[0]
+        out_of_data_points[i, 1] = X[1]
+
+        if y > 0:
+            out_of_data_points[i, 2] = 1
+        elif y < 0:
+            out_of_data_points[i, 2] = -1
+
+    return data, out_of_data_points
+
 
 if __name__ == '__main__':
-    X, Y = genarete_AND()
+    verify = True
 
+    while verify:
+        data = create_mock(100)
+        if data is None:
+            data = create_mock(100)
+        else:
+            verify = False
+    X = data[:, :2]
+    Y = data[:, 2]
+    pos = X[np.where(Y == 1)]
+    neg = X[np.where(Y == -1)]
+
+    plt.plot(pos[:, 0], pos[:, 1], 'r+')
+    plt.plot(neg[:, 0], neg[:, 1], 'bo')
+    plt.show()
+
+    print(data)

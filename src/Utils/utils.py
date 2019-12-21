@@ -1,7 +1,7 @@
 from scipy.io import arff
 from zipfile import ZipFile
 from numpy import array, zeros, where, sum, tanh, exp
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 from pathlib import Path
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
@@ -20,6 +20,10 @@ def sigmoid(logist, y):
 
 def normalize(X):
     return (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
+
+
+def get_error_rate(Y_output, Y_test):
+    return abs(sum(Y_test != Y_output)) * 1.0 / len(Y_test) * 1.0
 
 
 def get_accuracy(Y_output, Y_test):
@@ -55,13 +59,19 @@ def get_data(name, type=None):
 
 
 def get_inputs(data, Max_columns):
-    inputs = data.iloc[:, 0:Max_columns]
+    if isinstance(data, DataFrame):
+        inputs = data.iloc[:, 0:Max_columns]
+    else:
+        inputs = data[:, 0:Max_columns]
     X = array(inputs).astype(float)
     return X
 
 
 def get_outputs(data, Max_columns):
-    outputs = data.iloc[:, Max_columns:]
+    if isinstance(data, DataFrame):
+        outputs = data.iloc[:, Max_columns:]
+    else:
+        outputs = data[:, Max_columns]
     return outputs
 
 
