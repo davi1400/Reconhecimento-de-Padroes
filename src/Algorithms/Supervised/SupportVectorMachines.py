@@ -1,5 +1,7 @@
+from numpy import zeros, identity, array, concatenate, ones, multiply, matrix, outer, ravel, dot
+from src.Utils.utils import get_accuracy
 import cvxopt
-from numpy import zeros, diag, array
+import cvxopt.solvers
 
 
 class svm:
@@ -7,9 +9,9 @@ class svm:
         if type == "HardSoft":
             self.solver = self.quadratic_solver
         self.number_lines, self.number_columns = data.shape
-        self.X = data[:, :self.number_columns]
-        self.Y = data[:, self.number_columns]
-        self.wheigths = zeros((self.number_columns, 1))
+        self.X = data[:, :self.number_columns-1]
+        self.Y = data[:, self.number_columns-1]
+        self.best_wheigths = zeros((self.number_columns, 1))
 
     def quadratic_solver(self):
         """
@@ -30,16 +32,77 @@ class svm:
             W = X
             G = -1*Y*[[...X... 1 ]
                       [........1]
+                            .cvxopt.msk
                             .
                             .
-                            .
-                      [.........1]]
+                      [.........1]]HardSoft
         """
 
-        Q = zeros((self.number_columns, 1))
-        P = diag((self.number_columns, self.number_columns))
-        H = array([[1]])
-        G =
+        P = self.get_P()
+        Q = self.get_Q()
+        G = self.get_G()
+        H = self.get_H()
+
+        try:
+            solution = cvxopt.solvers.qp(P, Q, G, H)
+        except ValueError as error:
+            return None
+
+        self.best_wheigths = ravel(solution['x'])
+
+        return self.best_wheigths
+
+    def get_P(self):
+        tmp1 = concatenate((ones((self.number_columns - 1, 1)), zeros((self.number_columns - 1, 1))), axis=1)
+        tmp2 = zeros((1, self.number_columns - 1))
+        tmp3 = concatenate((tmp1, tmp2))
+        tmp4 = zeros((self.number_columns, 1))
+        tmp5 = concatenate((tmp3, tmp4), axis=1)
+        P = cvxopt.matrix(tmp5)
+
+        return P
+
+    def get_Q(self):
+        tmp1 = zeros((self.number_columns, 1))
+        Q = cvxopt.matrix(tmp1)
+
+        return Q
+
+    def get_G(self):
+        tmp2 = array(self.Y, ndmin=2).T * concatenate((self.X, ones((self.number_lines, 1))), axis=1)
+        G = cvxopt.matrix(tmp2 * -1.)
+
+        return G
+
+    def get_H(self):
+        tmp2 = ones((self.number_lines, 1))
+        H = cvxopt.matrix(tmp2 * -1.)
+
+        return H
 
     def train(self):
-        self.wheigths = self.solver()
+        solution = self.solver()
+        return solution
+
+    def predict(self, H, domain=None):
+        if domain == [-1., 1.]:
+            for i in range(len(H)):
+                if H[i][0] > 0:
+                    H[i][0] = 1
+                else:
+                    H[i][0] = -1
+
+            return H
+
+    def test(self, X_test, y_test):
+
+        H_output = dot(X_test,  array(self.best_wheigths[:2], ndmin=2).T) + self.best_wheigths[2]
+        Y_output = self.predict(H_output, domain=[-1., 1.])
+
+        accuracy = get_accuracy(Y_output, array(y_test, ndmin=2).T)
+
+        return accuracy
+
+
+
+
