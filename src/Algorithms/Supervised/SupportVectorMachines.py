@@ -63,7 +63,8 @@ class svm:
         tmp3 = concatenate((tmp1, tmp2))
         tmp4 = zeros((self.number_columns, 1))
         tmp5 = concatenate((tmp3, tmp4), axis=1)
-        P = cvxopt.matrix(tmp5)
+        tmp_aux = array([[1, 0, 0], [0, 1, 0], [0, 0, 0]])
+        P = cvxopt.matrix(tmp_aux, tc='d')
 
         return P
 

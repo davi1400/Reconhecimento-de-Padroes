@@ -53,7 +53,7 @@ class perceptron:
 
     def split(self):
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y,
-                                                                                test_size=self.test_rate)
+                                                                                test_size=0.01)
 
     def train(self, batch=True, normalizer=True):
 
@@ -80,13 +80,15 @@ class perceptron:
             for epoch in range(self.epochs):
                 # Hidden = X_train.dot(weights)
                 Y_output = self.forward(self.X_train[r[k]], weights)
+                if Y_output == 0:
+                    Y_output = -1.0
                 Error = self.Y_train[r[k]] - Y_output
 
                 if abs((self.Y_train - heaveside(self.X_train.dot(weights))).sum()) == 0:
                     # print(epoch)
                     break
-
-                self.backward(weights, Error, self.X_train[r[k]], self.learning_rate, online=True)
+                if Error != 0.0:
+                    self.backward(weights, Error, self.X_train[r[k]], self.learning_rate,  self.Y_train[r[k]],online=True)
 
                 k += 1
                 # Verificar se já passou por todos os exemplos se sim , fazer novamente randperm() e colocar o contador no 0
@@ -97,7 +99,7 @@ class perceptron:
         self.variance()
         self.standard_deviation()
         self.percents = []
-
+        print("Erro dentro da amostra", self.test(weights, self.X_train, self.Y_train, inverse=True))
         return weights, self.X_test, self.Y_test
 
     def test(self, weights, X_test, Y_test, confusion_matrix=False, inverse=False):
@@ -105,17 +107,17 @@ class perceptron:
         H_output = self.forward(X_test, weights)
         Y_output = self.predict(H_output)
         if inverse:
-            error_rate = get_error_rate(Y_output, array(self.Y_test, ndmin=2).T)
+            error_rate = get_error_rate(Y_output, array(Y_test, ndmin=2).T)
             return error_rate
         else:
-            accuracy = get_accuracy(Y_output, array(self.Y_test, ndmin=2).T)
+            accuracy = get_accuracy(Y_output, array(Y_test, ndmin=2).T)
             return accuracy
 
     def forward(self, X, weights):
         if self.type != 1:
             return self.g(self.logistic, X.dot(weights))
         else:
-            return self.g(X.dot(weights))
+            return (X.dot(weights))
 
     def predict(self, y):
         y = y.copy()
@@ -127,7 +129,7 @@ class perceptron:
                     y[i][0] = 0
         else:
             for i in range(0, len(y)):
-                if y[i][0] > 0:
+                if y[i][0] >= 0:
                     y[i][0] = 1
                 else:
                     y[i][0] = -1
@@ -136,7 +138,8 @@ class perceptron:
 
     def backward(self, weights, Error, X, learning_rate, Y, online=False):
         if online:
-            weights += array((learning_rate * Error[0] * X), ndmin=2).T
+            # weights += array((Y * X), ndmin=2).T
+            weights += array((learning_rate * Error * X), ndmin=2).T
         else:
             if self.type == 1:
                 # heaveside function
@@ -151,6 +154,7 @@ class perceptron:
                     derivate_y = self.get_derivate(Y)
 
             weights += (learning_rate * (derivate_y * Error).T.dot(X)).T
+#             weights += Y*X
 
         return weights
 
