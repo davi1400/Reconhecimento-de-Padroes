@@ -9,7 +9,7 @@ if __name__ == '__main__':
     number_executions = 1000
     execution_wins = {"SVM": 0,
                       "PERCEPTRON": 0}
-    number_points = 10
+    number_points = 100
 
     text_execution = "Realization {0}\n  Error rate {1}\n Model{2}"
 
@@ -64,5 +64,8 @@ if __name__ == '__main__':
                 execution_wins['SVM'] += 1
             else:
                 execution_wins['PERCEPTRON'] += 1
+
+            print(model.get_number_support_vectors())
+            # print(model.vec_sup)
 
     print(execution_wins)
