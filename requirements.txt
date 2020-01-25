@@ -9,3 +9,4 @@ cvxopt
 qpsolvers
 mosek
 enchant
+ipdb
