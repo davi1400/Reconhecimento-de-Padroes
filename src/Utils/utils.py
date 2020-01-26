@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 from math import sqrt
 from scipy.special import expit
+from seaborn import set, heatmap
 
 
 def sigmoid(logist, y):
@@ -22,16 +23,25 @@ def normalize(X):
     return (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
 
 
-def get_error_rate(Y_output, Y_test):
-    return abs(sum(Y_test != Y_output)) * 1.0 / len(Y_test) * 1.0
+def get_error_rate(y_output, y_test):
+    return abs(sum(y_test != y_output)) * 1.0 / len(y_test) * 1.0
 
 
-def get_accuracy(Y_output, Y_test):
-    return abs(sum(Y_test == Y_output)) * 1.0 / len(Y_test) * 1.0
+def get_accuracy(y_output, y_test):
+    return abs(sum(y_test == y_output)) * 1.0 / len(y_test) * 1.0
 
 
-def get_confusion_matrix(Y_output, Y_test):
-    return confusion_matrix(Y_test, Y_output)
+def get_confusion_matrix(y_output, y_test):
+    return confusion_matrix(y_test, y_output)
+
+
+def plot_confusion_matrix(confusion_matrix):
+    df_cm = DataFrame(confusion_matrix, range(confusion_matrix.shape[0]), range(confusion_matrix.shape[1]))
+    # plt.figure(figsize=(10,7))
+    set(font_scale=1.4)  # for label size
+    heatmap(df_cm, annot=True, annot_kws={"size": 16})  # font size
+
+    plt.show()
 
 
 def heaveside(y):
