@@ -1,4 +1,4 @@
-from numpy import zeros, concatenate, array, where, log, argmax, inf, sqrt, pi, exp
+from numpy import zeros, concatenate, array, where, log, argmax, inf, sqrt, pi, exp, ndarray
 
 
 class NaiveBayes:
@@ -30,22 +30,30 @@ class NaiveBayes:
 
     def train_gaussian(self, x_train, y_train):
 
-        N_class = max(y_train) + 1
+        if isinstance(max(y_train), ndarray):
+            max_class = max(y_train)[0]
+        else:
+            max_class = max(y_train)
+        N_class = max_class + 1
         N_examples = x_train.shape[0]
-        thetas_c = zeros((N_class, 1))
+        thetas_c = zeros((int(N_class), 1))
 
         for c in y_train:
-            thetas_c[c] += 1
+            if isinstance(c, ndarray):
+                indice = c[0]
+            else:
+                indice = c
+            thetas_c[int(indice)] += 1
 
         thetas_c = thetas_c / N_examples
 
-        Matrix_Mean = zeros((x_train.shape[1], N_class)).T
-        Variance_Matrix = zeros((x_train.shape[1], N_class)).T
+        Matrix_Mean = zeros((x_train.shape[1], int(N_class))).T
+        Variance_Matrix = zeros((x_train.shape[1], int(N_class))).T
 
-        for c in range(N_class):
+        for c in range(int(N_class)):
             N_y = len(where(y_train == c)[0])
             for i in range(x_train.shape[1]):
-                indices = where(y_train == c)
+                indices = where(y_train == c)[0]
                 Matrix_Mean[c][i] = (1. / (1. * N_y)) * sum(x_train[:, i][indices])
                 Variance_Matrix[c][i] = (1. / (1. * N_y)) * sum((x_train[:, i][indices] - Matrix_Mean[c][i]) ** 2)
 
