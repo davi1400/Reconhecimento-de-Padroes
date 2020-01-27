@@ -58,12 +58,16 @@ class svm:
         return self.best_wheigths
 
     def get_P(self):
-        tmp1 = concatenate((ones((self.number_columns - 1, 1)), zeros((self.number_columns - 1, 1))), axis=1)
-        tmp2 = zeros((1, self.number_columns - 1))
-        tmp3 = concatenate((tmp1, tmp2))
-        tmp4 = zeros((self.number_columns, 1))
-        tmp5 = concatenate((tmp3, tmp4), axis=1)
-        tmp_aux = array([[1, 0, 0], [0, 1, 0], [0, 0, 0]])
+        # tmp1 = concatenate((ones((self.number_columns - 1, 1)), zeros((self.number_columns - 1, 1))), axis=1)
+        # tmp2 = zeros((1, self.number_columns - 1))
+        # tmp3 = concatenate((tmp1, tmp2))
+        # tmp4 = zeros((self.number_columns, 1))
+        # tmp5 = concatenate((tmp3, tmp4), axis=1)
+        # tmp_aux = array([[1, 0, 0], [0, 1, 0], [0, 0, 0]])
+        # P = cvxopt.matrix(tmp_aux, tc='d')
+
+        tmp_aux = identity(self.number_columns)
+        tmp_aux[:, self.number_columns-1] = 0
         P = cvxopt.matrix(tmp_aux, tc='d')
 
         return P
@@ -101,7 +105,16 @@ class svm:
             return H
 
     def get_foward(self, X_test):
-        H_output = dot(X_test, array(self.best_wheigths[:2], ndmin=2).T) + self.best_wheigths[2]
+
+        if X_test.shape == array(self.best_wheigths[:self.best_wheigths.shape[0]-1], ndmin=2).T.shape:
+
+            H_output = dot(X_test, array(self.best_wheigths[:self.best_wheigths.shape[0]-1], ndmin=2).T)
+
+        else:
+            H_output = dot(X_test, array(self.best_wheigths[:self.best_wheigths.shape[0] - 1], ndmin=2))
+
+        H_output += self.best_wheigths[self.best_wheigths.shape[0]-1]
+
         self.vec_sup = sum(H_output == 1.)
         return H_output
 
@@ -109,7 +122,12 @@ class svm:
         H_output = self.get_foward(X_test)
         Y_output = self.predict(H_output, domain=[-1., 1.])
 
-        accuracy = get_accuracy(Y_output, array(y_test, ndmin=2).T)
+        if Y_output.shape == y_test.T.shape:
+
+            accuracy = get_accuracy(Y_output, array(y_test, ndmin=2).T)
+        else:
+
+            accuracy = get_accuracy(Y_output, array(y_test, ndmin=2))
 
         return accuracy
 
