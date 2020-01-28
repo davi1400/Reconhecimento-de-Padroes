@@ -20,16 +20,19 @@ if __name__ == '__main__':
     indices = where(Y == 0)
     Y[indices] = -1
 
-    print(X)
-    print(Y)
+    # print(X)
+    # print(Y)
 
-    for realization in range(1):
+    for realization in range(10):
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=test_size)
 
         data = array(data, ndmin=2)
-        data[:, :4] = normalize(data[:, :4])
         indices = where(data == 0)
         data[indices] = -1
+        # data[:, :4] = normalize(data[:, :4])
+
+
+        print(data)
 
         model = svm(data, type="HardSoft")
         best_w = model.train()
