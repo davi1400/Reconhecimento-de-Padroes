@@ -13,7 +13,11 @@ from seaborn import set, heatmap
 def sigmoid(logist, y):
     if logist:
         # sigmoid logistica
-        return expit(y)
+
+        try:
+            return expit(y)
+        except Exception:
+            return array(expit(y.tolist()))
     else:
         # sigmoid tangente hiperbolica
         return (1 - exp(-y))/(1 + exp(-y))
@@ -32,7 +36,7 @@ def get_accuracy(y_output, y_test):
 
 
 def get_confusion_matrix(y_output, y_test):
-    return confusion_matrix(y_test, y_output)
+    return confusion_matrix(y_test.tolist(), y_output.tolist())
 
 
 def plot_confusion_matrix(confusion_matrix):

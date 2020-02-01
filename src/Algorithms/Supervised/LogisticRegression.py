@@ -21,19 +21,19 @@ class LogisticRegression:
             else:
                 aux_y = array(y_train, ndmin=2)
             u = aux_y * (x_train.dot(Wheigts))
+
             H = sigmoid(True, -u)
             Y = self.predict(H)
 
             # Error = Y - array(y_train, ndmin=2).T
-            Error = sum(log(1 + exp(-1. * u)))
-            if Error <= 1.:
-                self.errros.append(Error)
-                return Wheigts
+            # Error = sum(log(1 + exp(-1. * u)))
+            # if Error <= 1.:
+            #     self.errros.append(Error)
+            #     return Wheigts
 
+            Wheigts += array(self.gradient_descent(x_train, y_train, u), dtype=float)
 
-            Wheigts += self.gradient_descent(x_train, y_train, u, Error)
-
-        self.errros.append(Error)
+        # self.errros.append(Error)
         return Wheigts
 
     def test(self, Wheigts, x_test, y_test, flag=False):
@@ -56,12 +56,13 @@ class LogisticRegression:
 
         return accuracy
 
-    def gradient_descent(self, X, Y, U, error):
+    def gradient_descent(self, X, Y, U):
         if array(Y, ndmin=2).shape[1] != 1:
             aux_y = array(Y, ndmin=2).T
         else:
             aux_y = array(Y, ndmin=2)
 
+        U = array(U, dtype=float)
         derivate = (sum((aux_y * X) / (1 + exp(U))))*(1./len(aux_y))
         return array(self.eta * derivate, ndmin=2).T
 

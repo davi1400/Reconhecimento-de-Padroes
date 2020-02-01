@@ -6,10 +6,12 @@ from numpy import zeros, identity, array, concatenate, \
 from src.Utils.utils import get_accuracy, get_data, normalize
 import cvxopt
 import cvxopt.solvers
+from pandas import DataFrame
 from src.Algorithms.Supervised.SupportVectorMachines import svm
 
 if __name__ == '__main__':
-    data = get_data("data_banknote_authentication.txt", type="csv")
+    data = get_data("column_2C_weka.arff", type="arff")
+    data = DataFrame(data)
     number_lines = data.shape[0]
     number_columns = data.shape[1]
     X = array(data, ndmin=2)[:, :number_columns - 1]
@@ -17,8 +19,11 @@ if __name__ == '__main__':
     train_size = .8
     test_size = .2
 
-    indices = where(Y == 0)
+    indices = where(Y == b'Abnormal')
     Y[indices] = -1
+
+    indices = where(Y == b'Normal')
+    Y[indices] = 1
 
     # print(X)
     # print(Y)
@@ -27,12 +32,15 @@ if __name__ == '__main__':
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=test_size)
 
         data = array(data, ndmin=2)
-        indices = where(data == 0)
+        indices = where(data == b'Abnormal')
         data[indices] = -1
+
+        indices = where(data == b'Normal')
+        data[indices] = 1
         # data[:, :4] = normalize(data[:, :4])
 
 
-        print(data)
+        # print(data)
 
         model = svm(data, type="HardSoft")
         best_w = model.train()

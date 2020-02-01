@@ -80,7 +80,7 @@ class svm:
 
     def get_G(self):
         tmp2 = array(self.Y, ndmin=2).T * concatenate((self.X, ones((self.number_lines, 1))), axis=1)
-        G = cvxopt.matrix(tmp2 * -1.)
+        G = cvxopt.matrix((tmp2 * -1.).T.tolist())
 
         return G
 
@@ -106,7 +106,7 @@ class svm:
 
     def get_foward(self, X_test):
 
-        if X_test.shape == array(self.best_wheigths[:self.best_wheigths.shape[0]-1], ndmin=2).T.shape:
+        if X_test.shape[1] == array(self.best_wheigths[:self.best_wheigths.shape[0]-1], ndmin=2).T.shape[0]:
 
             H_output = dot(X_test, array(self.best_wheigths[:self.best_wheigths.shape[0]-1], ndmin=2).T)
 
